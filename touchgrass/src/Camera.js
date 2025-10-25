@@ -9,6 +9,7 @@ function Camera() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
+  const validWords = ["grass", "sod", "grasses"]
 
   // Start the camera
   const startCamera = async () => {
@@ -65,12 +66,14 @@ function Camera() {
   const sendToAPI = async () => {
     if (pressedSend) return alert ("Already pressed send!");
     setPressedSend(true);
+
     if (!capturedImage) return alert("No image captured yet!");
 
     try {
       const imageBlob = dataURLtoBlob(capturedImage);
       const formData = new FormData();
       formData.append("file", imageBlob, "photo.png");
+      formData.append("valid_words", JSON.stringify(validWords))
 
       // ⚠️ Update this URL when Tarun's backend is ready
       const response = await fetch("http://localhost:5000/analyze", {

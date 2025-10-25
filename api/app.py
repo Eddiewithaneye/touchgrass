@@ -555,6 +555,8 @@ def analyze_image():
 
     # if not session_token:
     #     return jsonify({'error': 'Authentication required'}), 401
+    valid_words = request.form.get("valid_words", [])
+    print(valid_words)
 
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -565,7 +567,7 @@ def analyze_image():
     
     file_content: bytes = file.stream.read()
     identifier = ImageIdentifier()
-    result = identifier.checkImageFile(file_content, ["whiteboard", "beard"])
+    result = identifier.checkImageFile(file_content, valid_words)
     if (result != None): 	
         return jsonify({"message": f"{result}", "challenge_success": True}), 200
     else:

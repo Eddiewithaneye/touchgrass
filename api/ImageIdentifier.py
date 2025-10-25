@@ -56,7 +56,7 @@ class ImageIdentifier:
 		return_label = None
 		for label in response.label_annotations:
 			label_name = label.description.lower()
-			if any(v in label_name for v in valid_names):
+			if any(label_name in v for v in valid_names):
 				print(f"✅ Found partial match: {label.description} (score={label.score:.2f})")
 				return_label = label
 		if (return_label != None):
