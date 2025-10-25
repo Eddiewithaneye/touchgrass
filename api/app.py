@@ -557,7 +557,7 @@ def analyze_image():
     #     return jsonify({'error': 'Authentication required'}), 401
 
     if "file" not in request.files:
-        return jsonify({"eror": "No file part"}), 400
+        return jsonify({"error": "No file part"}), 400
 
     file: FileStorage = request.files["file"]
     if file.filename == "":
