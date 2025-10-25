@@ -45,6 +45,7 @@ main {
   pointer-events: none;
   z-index: 0;
 }
+
 .welcome-content{
   position: relative;
   background: rgba(255, 255, 255, 0.5);
