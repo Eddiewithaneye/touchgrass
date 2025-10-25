@@ -76,7 +76,7 @@ body {
 .camera-container::after {
   content: "";
   position: absolute; inset: 0;
-  background: url("C:\Users\vehar\touchgrass\touchgrass\public\nature-background.jpeg") center / cover no-repeat;
+  background: url("../public/nature-background.jpeg") center / cover no-repeat;
   opacity: 0.20;                      /* knob #1: 0.12–0.28 */
   mix-blend-mode: multiply;           /* knob #2: try 'soft-light' if you want gentler */
   filter: saturate(0.85) contrast(0.9) brightness(0.95); /* knob #3: tame colors */
