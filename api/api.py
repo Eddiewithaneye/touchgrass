@@ -12,7 +12,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route("/analyze", methods=["POST"])
 def analyze_image():
 	if "file" not in request.files:
-		return jsonify({"error": "No file part"}), 400
+		return jsonify({"eror": "No file part"}), 400
 
 	file: FileStorage = request.files["file"]
 	if file.filename == "":
@@ -21,8 +21,10 @@ def analyze_image():
 	file_content: bytes = file.stream.read()
 	identifier = ImageIdentifier()
 	result = identifier.checkImageFile(file_content, ["city", "skyscraper"])
-
-	return jsonify({"message": f"{result}"}), 200
+	if (result != None): 	
+		return jsonify({"message": f"{result}", "success": True}), 200
+	else:
+		return jsonify ({"message": "no image found", "success": False})
 
 if __name__ == "__main__":
     # debug=True → equivalent to --debug
