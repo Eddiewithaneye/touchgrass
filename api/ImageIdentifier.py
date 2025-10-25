@@ -11,12 +11,12 @@ class ImageIdentifier:
 	@staticmethod
 	@sleep_and_retry
 	@limits(calls=CALLS, period=RATE_LIMIT)
-	def check_limit():
+	def __check_limit():
 		# Empty function just to check for calls to API 
 		return	
 
-	def checkPhoto(self, imageURL: str, valid_names: list[str]) -> bool:
-		self.check_limit()
+	def checkPhotoURL(self, imageURL: str, valid_names: list[str]) -> bool:
+		self.__check_limit()
 		valid_names = {name.lower().strip() for name in valid_names}
 	
 		client = vision.ImageAnnotatorClient()
@@ -36,5 +36,26 @@ class ImageIdentifier:
 
 		return found
 
+	def checkImageFile(self, file_content: bytes, valid_names: list[str]) -> bool:
+		self.__check_limit()
+		valid_names = {name.lower().strip() for name in valid_names}
+	
+		client = vision.ImageAnnotatorClient()
+		request: dict = {
+			'image': {
+				'content': file_content
+			},
+		}
+		response: vision.AnnotateImageResponse = client.annotate_image(request)
+		print((response))
+		return_label = None
+		for label in response.label_annotations:
+			label_name = label.description.lower()
+			if any(v in label_name for v in valid_names):
+				print(f"✅ Found partial match: {label.description} (score={label.score:.2f})")
+				return_label = label
+
+		return return_label.description
+
 if __name__ == "__main__":
-	ImageIdentifier.checkPhoto(myimageURL, ["grass", "grasses"])
+	ImageIdentifier.checkPhotoURL(myimageURL, ["grass", "grasses"])
