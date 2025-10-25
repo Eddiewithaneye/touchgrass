@@ -1,4 +1,6 @@
 import { useState, useRef } from "react";
+import "./Camera.css";
+import TaskBar from "./TaskBar";
 
 function Camera() {
   const [showCamera, setShowCamera] = useState(false);
@@ -88,12 +90,18 @@ function Camera() {
     setResultMessage("");
   };
 
-  return (
-    <div>
+return (
+  <div className="camera-container">
+    {/* TaskBar sits at the top of the viewport */}
+    <TaskBar />
+
+    <div className="camera-card">
       <h2>TouchGrass Camera</h2>
 
       {!showCamera && !capturedImage && (
-        <button onClick={startCamera}>Start Camera</button>
+        <button className="start" onClick={startCamera}>
+          Start Camera
+        </button>
       )}
 
       {showCamera && (
@@ -106,14 +114,14 @@ function Camera() {
             height="300"
           />
           <br />
-          <button onClick={capturePhoto}>📸 Capture Photo</button>
+          <button className="capture" onClick={capturePhoto}>
+            📸 Capture Photo
+          </button>
         </div>
       )}
 
-      {/* Hidden canvas for processing */}
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
-      {/* Photo preview + upload options */}
       {capturedImage && (
         <div>
           <h3>Preview</h3>
@@ -122,20 +130,23 @@ function Camera() {
             alt="Captured"
             width="400"
             height="300"
-            style={{ borderRadius: "8px" }}
           />
           <br />
-          <button onClick={retakePhoto}>🔁 Retake</button>
-          <button onClick={sendToAPI}>🚀 Send to API</button>
+          <button className="retake" onClick={retakePhoto}>
+            🔁 Retake
+          </button>
+          <button className="send" onClick={sendToAPI}>
+            🚀 Send to API
+          </button>
         </div>
       )}
 
-      {/* Show result message */}
       {resultMessage && (
-        <h2 style={{ color: "green", marginTop: "10px" }}>{resultMessage}</h2>
+        <h2 className="result-message">{resultMessage}</h2>
       )}
     </div>
-  );
+  </div>
+);
 }
 
 export default Camera;
