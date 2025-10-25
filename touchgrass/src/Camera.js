@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
+import Header from "./components/Header.jsx"
 import "./Camera.css";
-import TaskBar from "./TaskBar";
+import Objectives from "./components/Objectives";
+
 
 function Camera() {
   const [showCamera, setShowCamera] = useState(false);
@@ -93,32 +95,35 @@ function Camera() {
 return (
   <div className="camera-container">
     {/* TaskBar sits at the top of the viewport */}
-    <TaskBar />
+    <Header />
+    <div className="camera-screen">
+      <div className="camera-card">
+        <h2>So you found something? Prove it!</h2>
 
-    <div className="camera-card">
-      <h2>TouchGrass Camera</h2>
-
-      {!showCamera && !capturedImage && (
-        <button className="start" onClick={startCamera}>
-          Start Camera
-        </button>
-      )}
-
-      {showCamera && (
-        <div>
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            width="400"
-            height="300"
-          />
-          <br />
-          <button className="capture" onClick={capturePhoto}>
-            📸 Capture Photo
+        {!showCamera && !capturedImage && (
+          <button className="start" onClick={startCamera}>
+            Start Camera
           </button>
-        </div>
-      )}
+        )}
+
+        {showCamera && (
+          <div>
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              width="400"
+              height="300"
+            />
+            <br />
+            <button className="capture" onClick={capturePhoto}>
+              📸 Capture Photo
+            </button>
+            
+          </div>
+        )}
+      </div>
+      {showCamera ? <Objectives showCamera={showCamera} /> : null}
 
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
