@@ -1,0 +1,76 @@
+.header {
+  width: 100%;
+  position: fixed;      /* stays at top even when scrolling */
+  top: 0;
+  left: 0;
+  background-color: #F9FAF5;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  flex-wrap:nowrap;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2E7D32;  /* deep green */
+}
+
+
+.login-btn {
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.login-btn:hover {
+  background-color: #256628;
+}
+
+.menu:hover {
+    background-color: #256628;
+}
+
+.menu {
+    background-color: #2E7D32;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: white;
+    margin-right:40px;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+}
+.right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;  /* left to far left, right to far right */
+    gap: 12px;
+    width: 100%;            /* container width */
+    margin: 0 auto;                  /* centers the row */
+}
+
+.container {
+    max-width: 1080px;      /* 960–1200 works well */
+    margin: 0 auto;
+    padding: 0 24px;
+}
