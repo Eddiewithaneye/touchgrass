@@ -1,6 +1,9 @@
 import "./Header.css";
+import Login from "./Login";
 
-export default function Header() {
+export default function Header( {onLoginClick} ) {
+
+
     return (
         <header className="header">
             <div className="inner">
@@ -10,7 +13,7 @@ export default function Header() {
                     </h1>
                 </div>
                 <div className="right">
-                    <button className="login-btn">
+                    <button onClick={onLoginClick} className="login-btn">
                         Log In
                     </button>
                     <button className="menu">

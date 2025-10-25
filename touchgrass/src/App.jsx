@@ -2,9 +2,11 @@ import { useState } from "react";
 import "./App.css";
 import Camera from "./Camera";
 import Header from "./components/Header";
+import Login from "./components/Login";
 
 function App() {
   const [started, setStarted] = useState(false);
+  const [loginPage, setLoginPage] =  useState(false);
 
   const handleStart = () => setStarted(true);
 
@@ -12,7 +14,10 @@ function App() {
     <div className="App">
       {!started ? (
         <main>
-          <Header />
+          <Header onLoginClick={() => setLoginPage(true)}/>
+          {loginPage ? (
+            <Login onClose={() => setLoginPage(false)} />
+          ) : (
           <div className="welcome-screen">
             <div className = "container">
               <div className = "welcome-content">
@@ -27,11 +32,14 @@ function App() {
               </div>
             </div>
           </div>
+          )}
         </main>
       ) : (
         <Camera />
       )}
     </div>
+
+    
   );
 }
 
