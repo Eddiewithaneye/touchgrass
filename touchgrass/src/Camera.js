@@ -10,6 +10,7 @@ function Camera() {
   const canvasRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
+  const [pressedSend, setPressedSend] = useState(false);
 
   // Start the camera
   const startCamera = async () => {
@@ -64,6 +65,8 @@ function Camera() {
 
   // Send image to backend for recognition
   const sendToAPI = async () => {
+    if (pressedSend) return alert ("Already pressed send!");
+    setPressedSend(true);
     if (!capturedImage) return alert("No image captured yet!");
 
     try {
@@ -72,7 +75,7 @@ function Camera() {
       formData.append("file", imageBlob, "photo.png");
 
       // ⚠️ Update this URL when Tarun's backend is ready
-      const response = await fetch("http://localhost:8000/analyze", {
+      const response = await fetch("http://localhost:5000/analyze", {
         method: "POST",
         body: formData,
       });
