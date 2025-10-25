@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import Camera from "./Camera";
 
 function App() {
+  const [started, setStarted] = useState(false);
+
+  const handleStart = () => setStarted(true);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!started ? (
+        <div className="welcome-screen">
+          <h1 className="welcome-title">🌿 Welcome to TouchGrass!</h1>
+          <p className="welcome-text">
+            TouchGrass helps you reconnect with nature by identifying the plants, trees,
+            and natural environments around you using your device's camera.
+          </p>
+          <button className="start-btn" onClick={handleStart}>
+            Start Exploring 🌎
+          </button>
+        </div>
+      ) : (
+        <Camera />
+      )}
     </div>
   );
 }

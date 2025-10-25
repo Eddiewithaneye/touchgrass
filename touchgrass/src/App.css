@@ -1,38 +1,58 @@
+/* ===== TouchGrass App Styling ===== */
+
 .App {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ecfdf5; /* emerald-50 */
+  color: #064e3b; /* emerald-900 */
+  font-family: "Inter", sans-serif;
+  padding: 2rem;
+}
+
+/* Welcome screen card */
+.welcome-screen {
+  background-color: #ffffff;
+  border: 1px solid #d1fae5; /* emerald-100 */
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15); /* emerald-500 tint */
+  max-width: 480px;
+  padding: 2rem;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.welcome-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669; /* emerald-600 */
+  margin-bottom: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.welcome-text {
+  font-size: 1rem;
+  color: #065f46; /* emerald-800 */
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.start-btn {
+  background-color: #059669; /* emerald-600 */
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.start-btn:hover {
+  background-color: #047857; /* emerald-700 */
+  transform: translateY(-2px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.start-btn:active {
+  transform: translateY(1px);
 }
