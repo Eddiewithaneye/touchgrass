@@ -1,58 +1,106 @@
-/* ===== TouchGrass App Styling ===== */
-
-.App {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ecfdf5; /* emerald-50 */
-  color: #064e3b; /* emerald-900 */
-  font-family: "Inter", sans-serif;
-  padding: 2rem;
+:root {
+  --primary: #2E7D32;
+  --secondary: #81C784;
+  --accent: #FFB74D;
+  --bg: #F9FAF5;
+  --ink: #2E2E2E;
 }
 
-/* Welcome screen card */
+.container {
+  .container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+}
+body {
+  margin: 0;
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+main {
+  padding-top: 88px; /* prevents content hiding under fixed header */
+}
+
+/* Welcome Section */
 .welcome-screen {
-  background-color: #ffffff;
-  border: 1px solid #d1fae5; /* emerald-100 */
-  border-radius: 1.25rem;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15); /* emerald-500 tint */
-  max-width: 480px;
-  padding: 2rem;
-  text-align: center;
+  position: relative;                 
+  min-height: calc(100vh - 88px);
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  background: linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%); /* keep your gradient */
+  overflow: hidden;                   
 }
+
+.welcome-screen::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("C:\Users\vehar\touchgrass\touchgrass\public\nature-background.jpeg") center / cover no-repeat;
+  opacity: 0.20;                      /* knob #1: 0.12–0.28 */
+  mix-blend-mode: multiply;           /* knob #2: try 'soft-light' if you want gentler */
+  filter: saturate(0.85) contrast(0.9) brightness(0.95); /* knob #3: tame colors */
+  pointer-events: none;
+  z-index: 0;
+}
+.welcome-content{
+  position: relative;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 48px 40px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 .welcome-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #059669; /* emerald-600 */
-  margin-bottom: 1rem;
+  display:flex;
+  align-items: center;
+  font-size: clamp(32px, 4vw, 48px);
+  color: var(--primary);
+  margin-bottom: 16px;
 }
 
 .welcome-text {
-  font-size: 1rem;
-  color: #065f46; /* emerald-800 */
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto 32px;
+  color: #2E2E2E;
+  font-size: 1.1rem;
 }
 
+/* Start Button */
 .start-btn {
-  background-color: #059669; /* emerald-600 */
-  color: #ffffff;
+  display: block;
+  margin: 0 auto;
+  background-color: var(--primary);
+  color: whitesmoke;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
   font-size: 1.1rem;
   font-weight: 600;
-  border: none;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  transition: all 0.25s ease;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
 .start-btn:hover {
-  background-color: #047857; /* emerald-700 */
+  background-color: var(--secondary);
   transform: translateY(-2px);
 }
 
 .start-btn:active {
-  transform: translateY(1px);
+  transform: translateY(0);
 }
