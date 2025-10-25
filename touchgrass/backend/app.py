@@ -30,7 +30,7 @@ app = Flask(__name__)
 # Configuration from environment variables with sensible defaults
 DATABASE = os.getenv('DATABASE_PATH', 'touchgrass.db')
 SECRET_KEY = os.getenv('SECRET_KEY', secrets.token_hex(32))
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3001')
 DEBUG_MODE = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
 # CORS configuration - restrict to specific origins
