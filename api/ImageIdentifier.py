@@ -45,6 +45,11 @@ class ImageIdentifier:
 			'image': {
 				'content': file_content
 			},
+			"features": [
+				{
+					"type": vision.Feature.Type.LABEL_DETECTION
+				}
+			]
 		}
 		response: vision.AnnotateImageResponse = client.annotate_image(request)
 		print((response))
