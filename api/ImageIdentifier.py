@@ -59,8 +59,9 @@ class ImageIdentifier:
 			if any(v in label_name for v in valid_names):
 				print(f"✅ Found partial match: {label.description} (score={label.score:.2f})")
 				return_label = label
-
-		return return_label.description
+		if (return_label != None):
+			return return_label.description
+		else: return None
 
 if __name__ == "__main__":
 	ImageIdentifier.checkPhotoURL(myimageURL, ["grass", "grasses"])
