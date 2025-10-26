@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import ObjectivesModal from "./components/ObjectivesModal";
 import HelpModal from "./components/HelpModal";
 import UserProfile from "./components/UserProfile";
+import Leaderboard from "./components/Leaderboard";
 
 export default function App() {
   const [started, setStarted] = useState(false);
@@ -16,6 +17,7 @@ export default function App() {
   const [showObjectives, setShowObjectives] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   // Load existing user on mount (from localStorage)
   useEffect(() => {
@@ -23,6 +25,21 @@ export default function App() {
     if (stored?.displayName || stored?.email) {
       setUser(stored);
     }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      console.log("[App] opening leaderboard due to event");
+      setShowLeaderboard(true);
+    };
+
+    window.addEventListener("tg-open-leaderboard", handler);
+    console.log("[App] installed tg-open-leaderboard listener");
+
+    return () => {
+      console.log("[App] removed tg-open-leaderboard listener");
+      window.removeEventListener("tg-open-leaderboard", handler);
+    };
   }, []);
 
   // Navigation helpers
@@ -45,7 +62,7 @@ export default function App() {
   // Modal handlers
   const handleLeaderboardClick = () => {
     // For now, just show help since LeaderboardModal is empty
-    setShowHelp(true);
+    setShowLeaderboard(true);
   };
 
   const handleObjectivesClick = () => {
@@ -105,6 +122,9 @@ export default function App() {
       </main>
 
       {/* Modals */}
+      <Leaderboard 
+        open={showLeaderboard}
+        onClose={() => setShowLeaderboard(false)}/>
       <ObjectivesModal
         open={showObjectives}
         onClose={() => setShowObjectives(false)}
