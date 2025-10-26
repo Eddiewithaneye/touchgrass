@@ -1,16 +1,44 @@
 import { useState, useRef } from "react";
 import Header from "./components/Header.jsx"
 import "./Camera.css";
-import Objectives from "./components/Objectives";
 
 
 function Camera( {onLoginClick, onLogoClick} ) {
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [objComplete, setObjComplete] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
+  const objectives = {
+    "leaf": {
+      text: "find a leaf",
+      description: "Leaf, as in the plant"
+    },
+    "grass": {
+      text: "find grass",
+      description: "grass, as in the plant"
+    },
+    "monster": {
+      text: "find a monster",
+      description: "A monster. Any kind of monster, including the energy drink, dragons, or any other kind of monsterish creature"
+    },
+    "human": {
+      text: "find a human",
+      description: "A Human. " 
+    },
+    "tk": {
+      "text": "find tk",
+      description: "TK is one of the UCF Knight hacks mascots. He is a funko pop-like figurine who looks like a blue and grey knight. He has a helmet and grey armor."
+    }
+  };
+
+  // Get random key
+  const keys = Object.keys(objectives);
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  const [currentObjective, setCurrentObjective] = useState(objectives[randomKey]);
+
 
   // Start the camera
   const startCamera = async () => {
@@ -67,12 +95,14 @@ function Camera( {onLoginClick, onLogoClick} ) {
   const sendToAPI = async () => {
     if (pressedSend) return alert ("Already pressed send!");
     setPressedSend(true);
+
     if (!capturedImage) return alert("No image captured yet!");
 
     try {
       const imageBlob = dataURLtoBlob(capturedImage);
       const formData = new FormData();
       formData.append("file", imageBlob, "photo.png");
+      formData.append("description", JSON.stringify(currentObjective.description))
 
       // ⚠️ Update this URL when Tarun's backend is ready
       const response = await fetch("http://localhost:5000/analyze", {
@@ -149,6 +179,28 @@ function Camera( {onLoginClick, onLogoClick} ) {
             </button>
           </div>
         )}
+      </div>
+        <p className = "objective">{currentObjective["text"]}</p>
+      <canvas ref={canvasRef} style={{ display: "none" }} />
+
+      {capturedImage && (
+        <div>
+          <h3>Preview</h3>
+          <img
+            src={capturedImage}
+            alt="Captured"
+            width="400"
+            height="300"
+          />
+          <br />
+          <button className="retake" onClick={retakePhoto}>
+            🔁 Retake
+          </button>
+          <button className="send" onClick={sendToAPI}>
+            🚀 Send to API
+          </button>
+        </div>
+      )}
 
         {resultMessage && (
           <h2 className="result-message">{resultMessage}</h2>
