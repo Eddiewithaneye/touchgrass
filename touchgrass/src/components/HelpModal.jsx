@@ -70,7 +70,7 @@ export default function HelpModal({ open, onClose }) {
       sections: [
         {
           title: "Scavenger Hunt Items",
-          content: "• Find a leaf - Any tree or plant leaf\n• Find grass - Ground cover or lawn grass\n• Find a monster - Creative interpretation welcome!\n• Find a human - People in natural settings"
+          content: "• Find a leaf - Any tree or plant leaf\n• Find grass - Ground cover or lawn grass\n• Find a monster - Creative interpretation welcome!\n"
         },
         {
           title: "Tips for Success",
