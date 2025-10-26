@@ -6,22 +6,38 @@ function Camera() {
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [objComplete, setObjComplete] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
 
   const objectives = {
-    "leaf": {
+    leaf: {
       text: "find a leaf",
-      description: "Leaf, as in the plant"
+      description: "Leaf, as in the plant",
     },
-    "grass": {
-      text: "find grass", 
-      description: "grass, as in the plant"
+    grass: {
+      text: "find grass",
+      description: "grass, as in the plant",
     },
-    "monster": {
+    monster: {
       text: "find a monster",
-      description: "A monster. Any kind of monster, including the energy drink, dragons, or any other kind of monsterish creature"
+      description:
+        "A monster. Any kind of monster, dragons, or any other kind of monsterish creature",
+    },
+    human: {
+      text: "find a human",
+      description: "A Human. ",
+    },
+    tk: {
+      text: "find tk",
+      description:
+        "A figurine who looks like a blue and grey knight. He has a helmet, grey armor, and a blue cape. You might not be able to see the blue cape.",
+    },
+    hand: {
+      text: "Find a hand",
+      description:
+        "A Hand"
     }
   };
 
@@ -116,7 +132,10 @@ function Camera() {
       const imageBlob = dataURLtoBlob(capturedImage);
       const formData = new FormData();
       formData.append("file", imageBlob, "photo.png");
-      formData.append("description", JSON.stringify(currentObjective.description));
+      formData.append(
+        "description",
+        JSON.stringify(currentObjective.description)
+      );
 
       // ⚠️ Update this URL when your backend is ready
       const response = await fetch("http://localhost:5000/analyze", {
@@ -176,7 +195,6 @@ function Camera() {
               Start Camera
             </button>
           )}
-
           {showCamera && (
             <div>
               <video
