@@ -52,12 +52,35 @@
   border: 2px solid var(--primary-green-pale);
 }
 
+.camera-screen h3 {
+  font-size: clamp(18px, 5vw, 24px);
+  margin-bottom: 5px;
+  color: #1a5e20;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
 .camera-screen h2 {
   font-size: clamp(18px, 5vw, 24px);
   margin-bottom: 20px;
   color: #1a5e20;
   line-height: 1.3;
   font-weight: 600;
+}
+
+.camera-screen h1 {
+  font-size: clamp(24px, 5vw, 32px);
+  margin-bottom: 20px;
+  color: #1a5e20;
+  line-height: 1.3;
+  font-weight: 650;
+}
+
+.objective-text {
+  font-size: clamp(24px, 5vw, 24px);
+  color: #1a5e20;
+  line-height: 1.3;
+  font-weight: 650; 
 }
 
 /* Video element - mobile optimized */
@@ -219,6 +242,11 @@ video {
   .camera-screen h2 {
     font-size: 18px;
     margin-bottom: 12px;
+  }
+
+  .camera-screen h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
   }
   
   video, .camera-screen img {

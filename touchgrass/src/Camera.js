@@ -12,29 +12,25 @@ function Camera() {
 
   const objectives = {
     leaf: {
-      text: "find a leaf",
-      description: "Leaf, as in the plant",
+      text: "Find a Leaf",
+      description: "LeaF, as in the plant",
     },
     grass: {
-      text: "find grass",
+      text: "Find Grass",
       description: "grass, as in the plant",
     },
     monster: {
-      text: "find a monster",
+      text: "Find a Monster",
       description:
-        "A monster. Any kind of monster, dragons, or any other kind of monsterish creature",
-    },
-    human: {
-      text: "find a human",
-      description: "A Human. ",
+        "A monster. Any kind oF monster, dragons, or any other kind of monsterish creature",
     },
     tk: {
-      text: "find tk",
+      text: "Find TK",
       description:
         "A figurine who looks like a blue and grey knight. He has a helmet, grey armor, and a blue cape. You might not be able to see the blue cape.",
     },
     hand: {
-      text: "Find a hand",
+      text: "Find a Hand",
       description:
         "A Hand"
     }
@@ -48,10 +44,7 @@ function Camera() {
   // 👉 NEW: tiny helper to detect a "match" from backend
   const isMatch = (result) => {
     if (!result) return false;
-    // support either an explicit boolean or a message string like "yes"
-    if (typeof result.match === "boolean") return result.match;
-    const msg = (result.message || "").toLowerCase();
-    return msg.includes("yes") || msg.includes("match") || msg.includes("great job");
+    return result.challenge_success
   };
 
   // Start the camera
@@ -144,7 +137,14 @@ function Camera() {
 
       const result = await response.json();
       const success = isMatch(result);
-      setResultMessage(result.message || "Result received!");
+      if (success) {
+        setResultMessage("Success! You Found It!");
+        setObjComplete(true)
+      }
+      else {
+        setResultMessage("Try again!")
+        setPressedSend(false)
+      }
 
       // Emit photo submission event for stats tracking
       window.dispatchEvent(new CustomEvent("tg-photo-submitted", {
@@ -154,7 +154,7 @@ function Camera() {
       // 👉 NEW: if the submission matches the prompt, open Leaderboard
       if (success) {
         // Update user stats and show success message
-        setResultMessage("🎉 Great match! " + (result.message || "Well done!"));
+        setResultMessage("🎉 Great match!");
         
         // fire a global event your Header/App can listen to
         setTimeout(() => {
@@ -187,7 +187,7 @@ function Camera() {
       <div className="camera-screen">
         <div className="camera-card">
           <h2>So you found something? Prove it!</h2>
-          <p className="objective">Current objective: {currentObjective.text}</p>
+          <h1>Current Objective: <br></br>{currentObjective.text}</h1>
 
           {!showCamera && !capturedImage && (
             <button className="start" onClick={startCamera}>
@@ -211,14 +211,10 @@ function Camera() {
           )}
         </div>
 
-        <p className="objective">{currentObjective["text"]}</p>
-          <canvas ref={canvasRef} style={{ display: "none" }} />
-          {resultMessage && <h2 className="result-message">{resultMessage}</h2>}
-
         <canvas ref={canvasRef} style={{ display: "none" }} />
 
         {capturedImage && ( <div>
-            <h3>Preview</h3>
+            <h2>Preview</h2>
             <img
               src={capturedImage}
               alt="Captured"
@@ -233,8 +229,7 @@ function Camera() {
             </div>
           </div>
         )}
-
-        {resultMessage && (
+        { resultMessage && (
           <div className="result-message">{resultMessage}</div>
         )}
       </div>
