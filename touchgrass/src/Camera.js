@@ -1,34 +1,27 @@
-import { useState, useRef, useEffect } from "react";   // 👉 NEW: useEffect for tiny cleanup
+import { useState, useRef, useEffect } from "react";
 import "./Camera.css";
+import Objectives from "./components/Objectives";
 
 function Camera() {
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [objComplete, setObjComplete] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
+
   const objectives = {
     "leaf": {
       text: "find a leaf",
       description: "Leaf, as in the plant"
     },
     "grass": {
-      text: "find grass",
+      text: "find grass", 
       description: "grass, as in the plant"
     },
     "monster": {
       text: "find a monster",
       description: "A monster. Any kind of monster, including the energy drink, dragons, or any other kind of monsterish creature"
-    },
-    "human": {
-      text: "find a human",
-      description: "A Human. " 
-    },
-    "tk": {
-      "text": "find tk",
-      description: "TK is one of the UCF Knight hacks mascots. He is a funko pop-like figurine who looks like a blue and grey knight. He has a helmet and grey armor."
     }
   };
 
@@ -36,7 +29,6 @@ function Camera() {
   const keys = Object.keys(objectives);
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
   const [currentObjective, setCurrentObjective] = useState(objectives[randomKey]);
-
 
   // 👉 NEW: tiny helper to detect a "match" from backend
   const isMatch = (result) => {
@@ -68,7 +60,7 @@ function Camera() {
     }
   };
 
-  // 👉 NEW: stop any active tracks (lightweight; doesn’t change your flow)
+  // 👉 NEW: stop any active tracks (lightweight; doesn't change your flow)
   const stopCamera = () => {
     const video = videoRef.current;
     const stream = video && video.srcObject;
@@ -124,7 +116,7 @@ function Camera() {
       const imageBlob = dataURLtoBlob(capturedImage);
       const formData = new FormData();
       formData.append("file", imageBlob, "photo.png");
-      formData.append("description", JSON.stringify(currentObjective.description))
+      formData.append("description", JSON.stringify(currentObjective.description));
 
       // ⚠️ Update this URL when your backend is ready
       const response = await fetch("http://localhost:5000/analyze", {
@@ -177,6 +169,7 @@ function Camera() {
       <div className="camera-screen">
         <div className="camera-card">
           <h2>So you found something? Prove it!</h2>
+          <p className="objective">Current objective: {currentObjective.text}</p>
 
           {!showCamera && !capturedImage && (
             <button className="start" onClick={startCamera}>
@@ -222,28 +215,6 @@ function Camera() {
             </div>
           </div>
         )}
-      </div>
-        <p className = "objective">{currentObjective["text"]}</p>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
-
-      {capturedImage && (
-        <div>
-          <h3>Preview</h3>
-          <img
-            src={capturedImage}
-            alt="Captured"
-            width="400"
-            height="300"
-          />
-          <br />
-          <button className="retake" onClick={retakePhoto}>
-            🔁 Retake
-          </button>
-          <button className="send" onClick={sendToAPI}>
-            🚀 Send to API
-          </button>
-        </div>
-      )}
 
         {resultMessage && (
           <div className="result-message">{resultMessage}</div>

@@ -48,15 +48,6 @@ export default function ObjectivesModal({ open, onClose }) {
       difficulty: "Hard",
       points: 25,
       tips: "Be creative! This could be an interesting tree shape, shadow, or natural formation that looks monster-like."
-    },
-    {
-      id: "human",
-      icon: "👤",
-      title: "Find a Human",
-      description: "People in natural settings",
-      difficulty: "Medium",
-      points: 15,
-      tips: "Capture people enjoying nature - hiking, sitting in parks, or exploring outdoors."
     }
   ];
 
