@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "./Login.css"; // styles below
 
-export default function Login() {
+export default function Login({ isSignup = true }) {
   const [formData, setFormData] = useState({
+    displayName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -21,30 +22,41 @@ export default function Login() {
     setError("");
     setIsLoading(true);
 
-    // simple validation (same logic as your TS page)
-    if (!formData.email || !formData.password || !formData.confirmPassword) {
-      setError("Please fill in all fields");
-      setIsLoading(false);
-      return;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      setIsLoading(false);
-      return;
+    // Validation for signup vs login
+    if (isSignup) {
+      if (!formData.displayName || !formData.email || !formData.password || !formData.confirmPassword) {
+        setError("Please fill in all fields");
+        setIsLoading(false);
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        setError("Passwords do not match");
+        setIsLoading(false);
+        return;
+      }
+      if (formData.password.length < 6) {
+        setError("Password must be at least 6 characters");
+        setIsLoading(false);
+        return;
+      }
+    } else {
+      if (!formData.email || !formData.password) {
+        setError("Please fill in all fields");
+        setIsLoading(false);
+        return;
+      }
     }
 
     try {
-      // call your backend — replace with your real API
-      await fakeAuthApiSignup(formData.email, formData.password);
-      setCreated(true); // or navigate with your router
-      // e.g., if using react-router: navigate("/scavenger-hunt");
+      if (isSignup) {
+        await fakeAuthApiSignup(formData.email, formData.password, formData.displayName);
+        setCreated(true);
+      } else {
+        await fakeAuthApiLogin(formData.email, formData.password);
+        setCreated(true);
+      }
     } catch (err) {
-      setError(err?.message || "Failed to create account");
+      setError(err?.message || (isSignup ? "Failed to create account" : "Failed to sign in"));
     } finally {
       setIsLoading(false);
     }
@@ -54,17 +66,37 @@ export default function Login() {
     <div className="page">
       <div className="intro">
         <div className="emoji">🌿</div>
-        <h2 className="title">Create your account</h2>
+        <h2 className="title">{isSignup ? "Create your account" : "Welcome back!"}</h2>
         <p className="hint">
-          Already have an account?{" "}
-          <a href="/login" className="link">Sign in here</a>
+          {isSignup ? (
+            <>Already have an account? <a href="/login" className="link">Sign in here</a></>
+          ) : (
+            <>Need an account? <a href="/signup" className="link">Sign up here</a></>
+          )}
         </p>
       </div>
 
       <div className="card">
         <form className="form" onSubmit={handleSubmit} noValidate>
           {error && <div className="alert">{error}</div>}
-          {created && <div className="success">Account created! 🎉</div>}
+          {created && <div className="success">{isSignup ? "Account created! 🎉" : "Welcome back! 🌿"}</div>}
+
+          {isSignup && (
+            <label className="field">
+              <span className="label">Display Name</span>
+              <input
+                id="displayName"
+                name="displayName"
+                type="text"
+                autoComplete="name"
+                value={formData.displayName}
+                onChange={handleChange}
+                placeholder="Your explorer name"
+                required
+                className="input"
+              />
+            </label>
+          )}
 
           <label className="field">
             <span className="label">Email</span>
@@ -87,54 +119,84 @@ export default function Login() {
               id="password"
               name="password"
               type="password"
-              autoComplete="new-password"
+              autoComplete={isSignup ? "new-password" : "current-password"}
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
               required
               className="input"
             />
-            <span className="help">Must be at least 6 characters</span>
+            {isSignup && <span className="help">Must be at least 6 characters</span>}
           </label>
 
-          <label className="field">
-            <span className="label">Confirm password</span>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-              className="input"
-            />
-          </label>
+          {isSignup && (
+            <label className="field">
+              <span className="label">Confirm password</span>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                className="input"
+              />
+            </label>
+          )}
 
           <button type="submit" className="btn" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Sign up"}
+            {isLoading ? (isSignup ? "Creating account..." : "Signing in...") : (isSignup ? "Sign up" : "Sign in")}
           </button>
         </form>
 
-        <div className="terms">
-          <div className="rule"><span>Terms</span></div>
-          <p className="tos">
-            By signing up, you agree to our terms of service and privacy policy.
-          </p>
-        </div>
+        {isSignup && (
+          <div className="terms">
+            <div className="rule"><span>Terms</span></div>
+            <p className="tos">
+              By signing up, you agree to our terms of service and privacy policy.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 /* Replace this with your real API call */
-function fakeAuthApiSignup(email, password) {
+function fakeAuthApiSignup(email, password, displayName) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // simple mock
       if (email.endsWith("@example.com")) reject(new Error("Email already in use"));
-      else resolve({ ok: true });
+      else {
+        // Save user data to localStorage for demo
+        const userData = { email, displayName, joinDate: new Date().toLocaleDateString() };
+        localStorage.setItem("tg.userStats", JSON.stringify({
+          displayName: displayName || "Explorer",
+          photosTaken: 0,
+          successfulMatches: 0,
+          currentStreak: 0,
+          bestStreak: 0,
+          completedObjectives: [],
+          joinDate: userData.joinDate
+        }));
+        resolve({ ok: true });
+      }
+    }, 700);
+  });
+}
+
+function fakeAuthApiLogin(email, password) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // simple mock login
+      if (email === "test@test.com" && password === "password") {
+        resolve({ ok: true });
+      } else {
+        reject(new Error("Invalid email or password"));
+      }
     }, 700);
   });
 }

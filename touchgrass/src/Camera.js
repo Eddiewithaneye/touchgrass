@@ -1,16 +1,23 @@
-import { useState, useRef } from "react";
-import Header from "./components/Header.jsx"
+import { useState, useRef, useEffect } from "react";   // 👉 NEW: useEffect for tiny cleanup
 import "./Camera.css";
 import Objectives from "./components/Objectives";
 
-
-function Camera( {onLoginClick, onLogoClick} ) {
+function Camera() {
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
+
+  // 👉 NEW: tiny helper to detect a "match" from backend
+  const isMatch = (result) => {
+    if (!result) return false;
+    // support either an explicit boolean or a message string like "yes"
+    if (typeof result.match === "boolean") return result.match;
+    const msg = (result.message || "").toLowerCase();
+    return msg.includes("yes") || msg.includes("match") || msg.includes("great job");
+  };
 
   // Start the camera
   const startCamera = async () => {
@@ -32,6 +39,21 @@ function Camera( {onLoginClick, onLogoClick} ) {
       alert("Could not access camera: " + error.message);
     }
   };
+
+  // 👉 NEW: stop any active tracks (lightweight; doesn’t change your flow)
+  const stopCamera = () => {
+    const video = videoRef.current;
+    const stream = video && video.srcObject;
+    if (stream && typeof stream.getTracks === "function") {
+      stream.getTracks().forEach((t) => t.stop());
+    }
+    if (video) video.srcObject = null;
+  };
+
+  // 👉 NEW: ensure camera releases when component unmounts
+  useEffect(() => {
+    return () => stopCamera();
+  }, []);
 
   // Capture a still image from the video
   const capturePhoto = () => {
@@ -65,7 +87,7 @@ function Camera( {onLoginClick, onLogoClick} ) {
 
   // Send image to backend for recognition
   const sendToAPI = async () => {
-    if (pressedSend) return alert ("Already pressed send!");
+    if (pressedSend) return alert("Already pressed send!");
     setPressedSend(true);
     if (!capturedImage) return alert("No image captured yet!");
 
@@ -74,17 +96,42 @@ function Camera( {onLoginClick, onLogoClick} ) {
       const formData = new FormData();
       formData.append("file", imageBlob, "photo.png");
 
-      // ⚠️ Update this URL when Tarun's backend is ready
+      // ⚠️ Update this URL when your backend is ready
       const response = await fetch("http://localhost:5000/analyze", {
         method: "POST",
         body: formData,
       });
 
       const result = await response.json();
+      const success = isMatch(result);
       setResultMessage(result.message || "Result received!");
+
+      // Emit photo submission event for stats tracking
+      window.dispatchEvent(new CustomEvent("tg-photo-submitted", {
+        detail: { success }
+      }));
+
+      // 👉 NEW: if the submission matches the prompt, open Leaderboard
+      if (success) {
+        // Update user stats and show success message
+        setResultMessage("🎉 Great match! " + (result.message || "Well done!"));
+        
+        // fire a global event your Header/App can listen to
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent("tg-open-leaderboard"));
+        }, 1500); // Delay to show success message first
+      }
     } catch (error) {
       console.error("Upload failed:", error);
       setResultMessage("Error sending image. Try again!");
+      
+      // Still emit event for failed attempt
+      window.dispatchEvent(new CustomEvent("tg-photo-submitted", {
+        detail: { success: false }
+      }));
+    } finally {
+      // 👉 NEW: let user press Send again after another capture
+      setPressedSend(false);
     }
   };
 
@@ -96,10 +143,7 @@ function Camera( {onLoginClick, onLogoClick} ) {
   };
 
   return (
-
     <div className="camera-container">
-      {/* TaskBar sits at the top of the viewport */}
-    
       <div className="camera-screen">
         <div className="camera-card">
           <h2>So you found something? Prove it!</h2>
@@ -123,10 +167,10 @@ function Camera( {onLoginClick, onLogoClick} ) {
               <button className="capture" onClick={capturePhoto}>
                 📸 Capture Photo
               </button>
-              
             </div>
           )}
         </div>
+
         {showCamera ? <Objectives showCamera={showCamera} /> : null}
 
         <canvas ref={canvasRef} style={{ display: "none" }} />
@@ -137,26 +181,24 @@ function Camera( {onLoginClick, onLogoClick} ) {
             <img
               src={capturedImage}
               alt="Captured"
-              width="400"
-              height="300"
             />
-            <br />
-            <button className="retake" onClick={retakePhoto}>
-              🔁 Retake
-            </button>
-            <button className="send" onClick={sendToAPI}>
-              🚀 Send to API
-            </button>
+            <div className="camera-buttons">
+              <button className="retake" onClick={retakePhoto}>
+                🔁 Retake
+              </button>
+              <button className="send" onClick={sendToAPI}>
+                🚀 Send to API
+              </button>
+            </div>
           </div>
         )}
 
         {resultMessage && (
-          <h2 className="result-message">{resultMessage}</h2>
+          <div className="result-message">{resultMessage}</div>
         )}
       </div>
     </div>
-
-  )
+  );
 }
 
 export default Camera;
