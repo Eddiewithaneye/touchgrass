@@ -8,6 +8,9 @@ import os
 import re
 from werkzeug.datastructures import FileStorage
 from ImageIdentifier import ImageIdentifier
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Try to import rate limiter, but make it optional
 try:
@@ -34,6 +37,8 @@ DATABASE = os.getenv('DATABASE_PATH', 'touchgrass.db')
 SECRET_KEY = os.getenv('SECRET_KEY', secrets.token_hex(32))
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3001')
 DEBUG_MODE = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+GEMINI_API_KEY = os.getenv('API_KEY')
+if (not GEMINI_API_KEY): raise 
 
 # CORS configuration - restrict to specific origins
 allowed_origins = "any"
@@ -555,8 +560,8 @@ def analyze_image():
 
     # if not session_token:
     #     return jsonify({'error': 'Authentication required'}), 401
-    valid_words = request.form.get("valid_words", [])
-    print(valid_words)
+    description = request.form.get("description", [])
+    print(description)
 
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -566,9 +571,9 @@ def analyze_image():
         return jsonify({"error": "No selected file"}), 400
     
     file_content: bytes = file.stream.read()
-    identifier = ImageIdentifier()
-    result = identifier.checkImageFile(file_content, valid_words)
-    if (result != None): 	
+    identifier = ImageIdentifier(GEMINI_API_KEY)
+    result = identifier.checkImageFile(file_content, description)
+    if (result): 	
         return jsonify({"message": f"{result}", "challenge_success": True}), 200
     else:
         return jsonify ({"message": "no image found", "challenge_success": False}), 200

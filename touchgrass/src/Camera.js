@@ -1,17 +1,44 @@
 import { useState, useRef } from "react";
 import Header from "./components/Header.jsx"
 import "./Camera.css";
-import Objectives from "./components/Objectives";
 
 
 function Camera() {
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [objComplete, setObjComplete] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
-  const validWords = ["grass", "sod", "grasses"]
+  const objectives = {
+    "leaf": {
+      text: "find a leaf",
+      description: "Leaf, as in the plant"
+    },
+    "grass": {
+      text: "find grass",
+      description: "grass, as in the plant"
+    },
+    "monster": {
+      text: "find a monster",
+      description: "A monster. Any kind of monster, including the energy drink, dragons, or any other kind of monsterish creature"
+    },
+    "human": {
+      text: "find a human",
+      description: "A Human. " 
+    },
+    "tk": {
+      "text": "find tk",
+      description: "TK is one of the UCF Knight hacks mascots. He is a funko pop-like figurine who looks like a blue and grey knight. He has a helmet and grey armor."
+    }
+  };
+
+  // Get random key
+  const keys = Object.keys(objectives);
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  const [currentObjective, setCurrentObjective] = useState(objectives[randomKey]);
+
 
   // Start the camera
   const startCamera = async () => {
@@ -75,7 +102,7 @@ function Camera() {
       const imageBlob = dataURLtoBlob(capturedImage);
       const formData = new FormData();
       formData.append("file", imageBlob, "photo.png");
-      formData.append("valid_words", JSON.stringify(validWords))
+      formData.append("description", JSON.stringify(currentObjective.description))
 
       // ⚠️ Update this URL when Tarun's backend is ready
       const response = await fetch("http://localhost:5000/analyze", {
@@ -129,8 +156,7 @@ return (
           </div>
         )}
       </div>
-      {showCamera ? <Objectives showCamera={showCamera} /> : null}
-
+        <p className = "objective">{currentObjective["text"]}</p>
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
       {capturedImage && (
