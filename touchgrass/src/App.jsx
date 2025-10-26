@@ -125,10 +125,12 @@ export default function App() {
       <Leaderboard 
         open={showLeaderboard}
         onClose={() => setShowLeaderboard(false)}/>
+      {/*}
       <ObjectivesModal
         open={showObjectives}
         onClose={() => setShowObjectives(false)}
       />
+      */}
       <HelpModal
         open={showHelp}
         onClose={() => setShowHelp(false)}

@@ -9,6 +9,7 @@ function Camera() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const objectives = {
     leaf: {
@@ -117,6 +118,7 @@ function Camera() {
   const sendToAPI = async () => {
     if (pressedSend) return alert("Already pressed send!");
     setPressedSend(true);
+    setLoading(true);
 
     if (!capturedImage) return alert("No image captured yet!");
 
@@ -129,7 +131,6 @@ function Camera() {
         JSON.stringify(currentObjective.description)
       );
 
-      // ⚠️ Update this URL when your backend is ready
       const response = await fetch("https://touchgrass.csprojects.dev/api/analyze", {
         method: "POST",
         body: formData,
@@ -172,6 +173,7 @@ function Camera() {
     } finally {
       // 👉 NEW: let user press Send again after another capture
       setPressedSend(false);
+      setLoading(false);
     }
   };
 
@@ -231,6 +233,9 @@ function Camera() {
         )}
         { resultMessage && (
           <div className="result-message">{resultMessage}</div>
+        )}
+        { loading && (
+          <div className="result-message">Loading...</div>
         )}
       </div>
     </div>
