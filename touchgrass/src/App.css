@@ -67,6 +67,7 @@ main {
 
 
 .welcome-title {
+  white-space: nowrap;
   display:flex;
   align-items: center;
   font-size: clamp(32px, 4vw, 48px);

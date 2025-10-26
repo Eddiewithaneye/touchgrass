@@ -1,0 +1,114 @@
+:root{
+  --primary:#2E7D32;
+  --primary-700:#256628;
+  --bg:#F9FAF5;
+  --ink:#2E2E2E;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --danger:#dc2626;
+  --danger-bg:#fef2f2;
+  --success:#065f46;
+  --success-bg:#ecfdf5;
+  --radius:12px;
+}
+
+*{box-sizing:border-box}
+body{
+    margin:0; 
+    font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; 
+    color:var(--ink); 
+    background:
+    linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%),
+    url("C:\Users\vehar\touchgrass\touchgrass\public\nature-background.jpeg");
+
+    background-position: center, center;
+    background-size: cover, cover;
+    background-repeat: no-repeat, no-repeat;
+
+    /* make only the image fixed; gradient scrolls */
+    background-attachment: scroll, fixed;
+}
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:32px 16px;
+  gap:24px;
+  background: linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%);
+}
+
+
+
+.intro{ text-align:center; }
+.emoji{ font-size:56px; }
+.title{ margin:12px 0 6px; color:var(--primary); font-weight:800; }
+.hint{ color:var(--muted); margin:0; }
+.link{ color:var(--primary); text-decoration:none; font-weight:600; }
+.link:hover{ text-decoration:underline; }
+
+.card{
+  width:min(560px, 92vw);
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 10px 28px rgba(25,60,30,.08);
+  padding:24px;
+}
+
+.form{ display:grid; gap:16px; }
+
+.field{ display:block; }
+.label{ display:block; font-size:.95rem; color:#374151; margin-bottom:6px; }
+.input{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 12px;
+  outline:none;
+}
+.input:focus{ border-color:var(--primary); box-shadow:0 0 0 3px rgba(46,125,50,.15); }
+
+.help{ display:block; color:var(--muted); font-size:.9rem; margin-top:6px; }
+
+.btn{
+  width:100%;
+  height:42px;
+  border:0;
+  border-radius:8px;
+  background:var(--primary);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(46,125,50,.25);
+  transition:.15s ease;
+}
+.btn:hover{ background:var(--primary-700); }
+.btn:disabled{ opacity:.6; cursor:not-allowed; }
+
+.alert{
+  background:var(--danger-bg);
+  color:var(--danger);
+  border:1px solid #fecaca;
+  padding:10px 12px;
+  border-radius:8px;
+}
+.success{
+  background:var(--success-bg);
+  color:var(--success);
+  border:1px solid #a7f3d0;
+  padding:10px 12px;
+  border-radius:8px;
+}
+
+.terms{ margin-top:18px; text-align:center; color:var(--muted); }
+.rule{
+  position:relative; height:1px; background:var(--border); margin:10px 0 8px;
+}
+.rule span{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  background:#fff; padding:0 8px; color:#6b7280; font-size:.9rem;
+}
+.tos{ margin:6px 0 0; font-size:.9rem; }
