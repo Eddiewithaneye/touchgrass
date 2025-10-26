@@ -100,7 +100,7 @@ main {
 
 .welcome-content {
   position: relative;
-  background: rgba(200, 230, 201, 0.8);
+  background-color: rgba(200, 230, 201, .9);
   backdrop-filter: blur(15px);
   border-radius: 20px;
   padding: 24px 20px;
@@ -245,3 +245,4 @@ main {
     font-size: 1.1rem;
   }
 }
+

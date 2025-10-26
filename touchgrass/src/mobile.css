@@ -96,7 +96,7 @@
   
   .welcome-content,
   .camera-screen {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(200, 230, 201, .9);
     color: #e5e5e5;
   }
   

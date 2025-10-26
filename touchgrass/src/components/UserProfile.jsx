@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./UserProfile.css";
 
-export default function UserProfile({ open, onClose }) {
+export default function UserProfile({ open, onClose, onUserUpdate }) {
   const [userStats, setUserStats] = useState({
     displayName: "Explorer",
     photosTaken: 0,
@@ -116,6 +116,10 @@ export default function UserProfile({ open, onClose }) {
                   const updatedStats = { ...userStats, displayName: newName.trim() };
                   setUserStats(updatedStats);
                   localStorage.setItem("tg.userStats", JSON.stringify(updatedStats));
+                  // Notify parent component about the user update
+                  if (onUserUpdate) {
+                    onUserUpdate(updatedStats);
+                  }
                 }
               }}
             >

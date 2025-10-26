@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";   // 👉 NEW: useEffect for tiny cleanup
+import { useState, useRef, useEffect } from "react";
 import "./Camera.css";
 
 function Camera() {
@@ -9,6 +9,7 @@ function Camera() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [resultMessage, setResultMessage] = useState("");
   const [pressedSend, setPressedSend] = useState(false);
+
   const objectives = {
     leaf: {
       text: "find a leaf",
@@ -44,7 +45,6 @@ function Camera() {
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
   const [currentObjective, setCurrentObjective] = useState(objectives[randomKey]);
 
-
   // 👉 NEW: tiny helper to detect a "match" from backend
   const isMatch = (result) => {
     if (!result) return false;
@@ -75,7 +75,7 @@ function Camera() {
     }
   };
 
-  // 👉 NEW: stop any active tracks (lightweight; doesn’t change your flow)
+  // 👉 NEW: stop any active tracks (lightweight; doesn't change your flow)
   const stopCamera = () => {
     const video = videoRef.current;
     const stream = video && video.srcObject;
@@ -137,7 +137,7 @@ function Camera() {
       );
 
       // ⚠️ Update this URL when your backend is ready
-      const response = await fetch("http://localhost:5000/analyze", {
+      const response = await fetch("https://touchgrass.csprojects.dev/api/analyze", {
         method: "POST",
         body: formData,
       });
@@ -187,6 +187,7 @@ function Camera() {
       <div className="camera-screen">
         <div className="camera-card">
           <h2>So you found something? Prove it!</h2>
+          <p className="objective">Current objective: {currentObjective.text}</p>
 
           {!showCamera && !capturedImage && (
             <button className="start" onClick={startCamera}>
@@ -210,12 +211,13 @@ function Camera() {
           )}
         </div>
 
-        {showCamera ? <Objectives showCamera={showCamera} /> : null}
+        <p className="objective">{currentObjective["text"]}</p>
+          <canvas ref={canvasRef} style={{ display: "none" }} />
+          {resultMessage && <h2 className="result-message">{resultMessage}</h2>}
 
         <canvas ref={canvasRef} style={{ display: "none" }} />
 
-        {capturedImage && (
-          <div>
+        {capturedImage && ( <div>
             <h3>Preview</h3>
             <img
               src={capturedImage}
@@ -231,28 +233,6 @@ function Camera() {
             </div>
           </div>
         )}
-      </div>
-        <p className = "objective">{currentObjective["text"]}</p>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
-
-      {capturedImage && (
-        <div>
-          <h3>Preview</h3>
-          <img
-            src={capturedImage}
-            alt="Captured"
-            width="400"
-            height="300"
-          />
-          <br />
-          <button className="retake" onClick={retakePhoto}>
-            🔁 Retake
-          </button>
-          <button className="send" onClick={sendToAPI}>
-            🚀 Send to API
-          </button>
-        </div>
-      )}
 
         {resultMessage && (
           <div className="result-message">{resultMessage}</div>
