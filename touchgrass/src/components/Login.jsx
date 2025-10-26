@@ -1,7 +1,8 @@
 import { useState } from "react";
-import "./Login.css"; // styles below
+import "./Login.css";
 
-export default function Login({ isSignup = true }) {
+export default function Login({ isSignup: isSignupDefault = true, onClose }) {
+  const [isSignup, setIsSignup] = useState(isSignupDefault);
   const [formData, setFormData] = useState({
     displayName: "",
     email: "",
@@ -14,7 +15,7 @@ export default function Login({ isSignup = true }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -22,25 +23,27 @@ export default function Login({ isSignup = true }) {
     setError("");
     setIsLoading(true);
 
-    // Validation for signup vs login
+    // Basic validation
     if (isSignup) {
-      if (!formData.displayName || !formData.email || !formData.password || !formData.confirmPassword) {
+      const { displayName, email, password, confirmPassword } = formData;
+      if (!displayName || !email || !password || !confirmPassword) {
         setError("Please fill in all fields");
         setIsLoading(false);
         return;
       }
-      if (formData.password !== formData.confirmPassword) {
+      if (password !== confirmPassword) {
         setError("Passwords do not match");
         setIsLoading(false);
         return;
       }
-      if (formData.password.length < 6) {
+      if (password.length < 6) {
         setError("Password must be at least 6 characters");
         setIsLoading(false);
         return;
       }
     } else {
-      if (!formData.email || !formData.password) {
+      const { email, password } = formData;
+      if (!email || !password) {
         setError("Please fill in all fields");
         setIsLoading(false);
         return;
@@ -50,17 +53,45 @@ export default function Login({ isSignup = true }) {
     try {
       if (isSignup) {
         await fakeAuthApiSignup(formData.email, formData.password, formData.displayName);
-        setCreated(true);
       } else {
         await fakeAuthApiLogin(formData.email, formData.password);
-        setCreated(true);
       }
+
+      // Mark success so the UI can flash a message
+      setCreated(true);
+
+      // Pull user from storage (signup stored it; login may need to seed it)
+      const stored = JSON.parse(localStorage.getItem("tg.userStats") || "null");
+      const user = stored?.displayName
+        ? stored
+        : seedUserIfMissing(formData); // ensures we always have a user object
+
+      // Brief success flash, then notify parent with the user object
+      setTimeout(() => {
+        onClose?.(user);
+      }, 700);
     } catch (err) {
       setError(err?.message || (isSignup ? "Failed to create account" : "Failed to sign in"));
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Ensures a basic user record exists even after "login" flow
+  function seedUserIfMissing({ displayName, email }) {
+    const fallback = {
+      displayName: displayName || "Explorer",
+      photosTaken: 0,
+      successfulMatches: 0,
+      currentStreak: 0,
+      bestStreak: 0,
+      completedObjectives: [],
+      joinDate: new Date().toLocaleDateString(),
+      email: email || "",
+    };
+    localStorage.setItem("tg.userStats", JSON.stringify(fallback));
+    return fallback;
+  }
 
   return (
     <div className="page">
@@ -69,9 +100,19 @@ export default function Login({ isSignup = true }) {
         <h2 className="title">{isSignup ? "Create your account" : "Welcome back!"}</h2>
         <p className="hint">
           {isSignup ? (
-            <>Already have an account? <a href="/login" className="link">Sign in here</a></>
+            <>
+              Already have an account?{" "}
+              <button type="button" className="link" onClick={() => setIsSignup(false)}>
+                Sign in here
+              </button>
+            </>
           ) : (
-            <>Need an account? <a href="/signup" className="link">Sign up here</a></>
+            <>
+              Need an account?{" "}
+              <button type="button" className="link" onClick={() => setIsSignup(true)}>
+                Sign up here
+              </button>
+            </>
           )}
         </p>
       </div>
@@ -79,7 +120,11 @@ export default function Login({ isSignup = true }) {
       <div className="card">
         <form className="form" onSubmit={handleSubmit} noValidate>
           {error && <div className="alert">{error}</div>}
-          {created && <div className="success">{isSignup ? "Account created! 🎉" : "Welcome back! 🌿"}</div>}
+          {created && (
+            <div className="success">
+              {isSignup ? "Account created! 🎉" : "Signed in! 🌿"}
+            </div>
+          )}
 
           {isSignup && (
             <label className="field">
@@ -147,7 +192,13 @@ export default function Login({ isSignup = true }) {
           )}
 
           <button type="submit" className="btn" disabled={isLoading}>
-            {isLoading ? (isSignup ? "Creating account..." : "Signing in...") : (isSignup ? "Sign up" : "Sign in")}
+            {isLoading
+              ? isSignup
+                ? "Creating account..."
+                : "Signing in..."
+              : isSignup
+              ? "Sign up"
+              : "Sign in"}
           </button>
         </form>
 
@@ -164,24 +215,24 @@ export default function Login({ isSignup = true }) {
   );
 }
 
-/* Replace this with your real API call */
+/* ======= Demo API mocks (replace with real calls) ======= */
 function fakeAuthApiSignup(email, password, displayName) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // simple mock
-      if (email.endsWith("@example.com")) reject(new Error("Email already in use"));
-      else {
-        // Save user data to localStorage for demo
-        const userData = { email, displayName, joinDate: new Date().toLocaleDateString() };
-        localStorage.setItem("tg.userStats", JSON.stringify({
+      if (email.endsWith("@example.com")) {
+        reject(new Error("Email already in use"));
+      } else {
+        const userData = {
           displayName: displayName || "Explorer",
           photosTaken: 0,
           successfulMatches: 0,
           currentStreak: 0,
           bestStreak: 0,
           completedObjectives: [],
-          joinDate: userData.joinDate
-        }));
+          joinDate: new Date().toLocaleDateString(),
+          email,
+        };
+        localStorage.setItem("tg.userStats", JSON.stringify(userData));
         resolve({ ok: true });
       }
     }, 700);
@@ -191,8 +242,23 @@ function fakeAuthApiSignup(email, password, displayName) {
 function fakeAuthApiLogin(email, password) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // simple mock login
+      // very basic demo credential
       if (email === "test@test.com" && password === "password") {
+        // If no user in storage, seed a minimal one so Header has something to show
+        const existing = JSON.parse(localStorage.getItem("tg.userStats") || "null");
+        if (!existing) {
+          const userData = {
+            displayName: "Explorer",
+            photosTaken: 0,
+            successfulMatches: 0,
+            currentStreak: 0,
+            bestStreak: 0,
+            completedObjectives: [],
+            joinDate: new Date().toLocaleDateString(),
+            email,
+          };
+          localStorage.setItem("tg.userStats", JSON.stringify(userData));
+        }
         resolve({ ok: true });
       } else {
         reject(new Error("Invalid email or password"));

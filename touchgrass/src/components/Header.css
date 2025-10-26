@@ -41,6 +41,29 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.logout-btn {
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 44px;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent; 
+}
+
+.welcome {
+    margin-right:10px;
+}
+
+.logout-btn:hover {
+    background-color: #256628;
+}
+
 .login-btn:hover {
   background-color: #256628;
 }
