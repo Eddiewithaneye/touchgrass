@@ -20,21 +20,19 @@ function Camera() {
       text: "Find Grass",
       description: "grass, as in the plant",
     },
-    monster: {
-      text: "Find a Monster",
-      description:
-        "A monster. Any kind oF monster, dragons, or any other kind of monsterish creature",
+    bird: {
+      text: "Find a Bird (Animal)",
+      description: "A bird, the animal",
+    },
+    bug: {
+      text: "Find a Bug (Creature)",
+      description: "A bug, the creature. A software bug would be acceptable as well"
     },
     tk: {
       text: "Find TK",
       description:
         "A figurine who looks like a blue and grey knight. He has a helmet, grey armor, and a blue cape. You might not be able to see the blue cape.",
     },
-    hand: {
-      text: "Find a Hand",
-      description:
-        "A Hand"
-    }
   };
 
   // Get random key
