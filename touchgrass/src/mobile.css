@@ -1,0 +1,245 @@
+/* Mobile-specific optimizations and cross-browser compatibility */
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari viewport fix */
+  body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Fix for iOS Safari bottom bar */
+  .camera-container,
+  .welcome-screen {
+    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height)); /* Dynamic viewport height */
+  }
+  
+  /* iOS input zoom prevention */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  /* Android Chrome address bar compensation */
+  .camera-container,
+  .welcome-screen {
+    min-height: calc(100vh - var(--header-height));
+    min-height: calc(100svh - var(--header-height)); /* Small viewport height */
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .start-btn:hover,
+  .capture:hover,
+  .retake:hover,
+  .send:hover,
+  .login-btn:hover,
+  .menu:hover,
+  .menu-item:hover,
+  .lb-close:hover,
+  .profile-btn:hover,
+  .help-btn:hover,
+  .objectives-btn:hover {
+    transform: none;
+    background-color: inherit;
+  }
+  
+  /* Enhanced touch targets */
+  button, .menu-item, .lb-close {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Larger tap targets for small elements */
+  .lb-close, .help-close, .profile-close, .objectives-close {
+    padding: 12px;
+    margin: -4px;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper borders and shadows */
+  .camera-screen,
+  .welcome-content,
+  .menu-dropdown,
+  .lb-card,
+  .profile-modal,
+  .help-modal,
+  .objectives-modal {
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --ink: #e5e5e5;
+  }
+  
+  .welcome-content,
+  .camera-screen {
+    background: rgba(0, 0, 0, 0.8);
+    color: #e5e5e5;
+  }
+  
+  .menu-dropdown,
+  .lb-card,
+  .profile-modal,
+  .help-modal,
+  .objectives-modal {
+    background: #2a2a2a;
+    color: #e5e5e5;
+    border-color: #404040;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Compact header for landscape */
+  :root {
+    --header-height: 60px;
+  }
+  
+  /* Reduce padding in landscape */
+  .camera-screen,
+  .welcome-content {
+    padding: 16px;
+  }
+  
+  /* Horizontal button layout in landscape */
+  .camera-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  /* Smaller modals in landscape */
+  .lb-card,
+  .profile-modal,
+  .help-modal,
+  .objectives-modal {
+    max-height: 80vh;
+    width: 90vw;
+    max-width: 600px;
+  }
+}
+
+/* Very small screens (< 320px) */
+@media (max-width: 320px) {
+  .header {
+    padding: 8px 12px;
+  }
+  
+  .logo {
+    font-size: 16px;
+  }
+  
+  .login-btn, .menu {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .welcome-content,
+  .camera-screen {
+    padding: 16px 12px;
+  }
+  
+  .menu-dropdown {
+    width: calc(100vw - 16px);
+    right: -4px;
+  }
+}
+
+/* Large screens optimization */
+@media (min-width: 1200px) {
+  .camera-screen,
+  .welcome-content {
+    max-width: 800px;
+  }
+  
+  .menu-dropdown {
+    width: 320px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .header,
+  .menu-dropdown,
+  .lb-backdrop,
+  .profile-backdrop,
+  .help-backdrop,
+  .objectives-backdrop {
+    display: none !important;
+  }
+  
+  .camera-container,
+  .welcome-screen {
+    padding-top: 0;
+  }
+}
+
+/* Focus management for keyboard navigation */
+.keyboard-nav button:focus,
+.keyboard-nav .menu-item:focus {
+  outline: 3px solid #2E7D32;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #2E7D32;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Safe area insets for devices with notches */
+@supports (padding: max(0px)) {
+  .header {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  
+  .camera-container,
+  .welcome-screen {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
