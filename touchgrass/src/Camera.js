@@ -22,7 +22,7 @@ function Camera({ onLoginClick, onLogoClick }) {
     monster: {
       text: "find a monster",
       description:
-        "A monster. Any kind of monster, including the energy drink, dragons, or any other kind of monsterish creature",
+        "A monster. Any kind of monster, dragons, or any other kind of monsterish creature",
     },
     human: {
       text: "find a human",
@@ -31,8 +31,13 @@ function Camera({ onLoginClick, onLogoClick }) {
     tk: {
       text: "find tk",
       description:
-        "TK is one of the UCF Knight hacks mascots. He is a funko pop-like figurine who looks like a blue and grey knight. He has a helmet and grey armor.",
+        "A figurine who looks like a blue and grey knight. He has a helmet, grey armor, and a blue cape. You might not be able to see the blue cape.",
     },
+    hand: {
+      text: "Find a hand",
+      description:
+        "A Hand"
+    }
   };
 
   // Get random key
@@ -110,7 +115,7 @@ function Camera({ onLoginClick, onLogoClick }) {
       );
 
       // ⚠️ Update this URL when Tarun's backend is ready
-      const response = await fetch("http://localhost:5000/analyze", {
+      const response = await fetch("http://20.191.84.110:5001/analyze", {
         method: "POST",
         body: formData,
       });
