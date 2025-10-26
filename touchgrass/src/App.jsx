@@ -116,6 +116,7 @@ export default function App() {
       <UserProfile
         open={showProfile}
         onClose={() => setShowProfile(false)}
+        onUserUpdate={setUser}
       />
     </div>
   );
