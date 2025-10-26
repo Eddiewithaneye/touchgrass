@@ -19,7 +19,7 @@ body{
     color:var(--ink); 
     background:
     linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%),
-    url("C:\Users\vehar\touchgrass\touchgrass\public\nature-background.jpeg");
+    url("../../public/nature-background.jpeg");
 
     background-position: center, center;
     background-size: cover, cover;
