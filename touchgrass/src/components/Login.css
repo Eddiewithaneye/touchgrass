@@ -13,7 +13,21 @@
 }
 
 *{box-sizing:border-box}
-body{margin:0; font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink); background-color: blue;}
+body{
+    margin:0; 
+    font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; 
+    color:var(--ink); 
+    background:
+    linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%),
+    url("C:\Users\vehar\touchgrass\touchgrass\public\nature-background.jpeg");
+
+    background-position: center, center;
+    background-size: cover, cover;
+    background-repeat: no-repeat, no-repeat;
+
+    /* make only the image fixed; gradient scrolls */
+    background-attachment: scroll, fixed;
+}
 
 .page{
   min-height:100vh;
@@ -23,8 +37,10 @@ body{margin:0; font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-ser
   justify-content:center;
   padding:32px 16px;
   gap:24px;
-  background-color: linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%);
+  background: linear-gradient(180deg, #C1E1B8 0%, #A5CE9E 100%);
 }
+
+
 
 .intro{ text-align:center; }
 .emoji{ font-size:56px; }
