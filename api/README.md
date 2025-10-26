@@ -235,6 +235,8 @@ The API returns standard HTTP status codes:
 - Verify `API_KEY` is set in `.env`
 - Check Gemini API key is valid at https://aistudio.google.com/
 
-## License
+## 📄 License
 
-[Your License Here]
+MIT License - feel free to use, modify, and share!
+
+Built for KnightHacksVIII 2025
