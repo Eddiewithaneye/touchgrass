@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import "./Camera.css";
-import Objectives from "./components/Objectives";
 
 function Camera() {
   const [showCamera, setShowCamera] = useState(false);
@@ -138,7 +137,7 @@ function Camera() {
       );
 
       // ⚠️ Update this URL when your backend is ready
-      const response = await fetch("http://localhost:5000/analyze", {
+      const response = await fetch("https://touchgrass.csprojects.dev/api/analyze", {
         method: "POST",
         body: formData,
       });
@@ -212,12 +211,13 @@ function Camera() {
           )}
         </div>
 
-        {showCamera ? <Objectives showCamera={showCamera} /> : null}
+        <p className="objective">{currentObjective["text"]}</p>
+          <canvas ref={canvasRef} style={{ display: "none" }} />
+          {resultMessage && <h2 className="result-message">{resultMessage}</h2>}
 
         <canvas ref={canvasRef} style={{ display: "none" }} />
 
-        {capturedImage && (
-          <div>
+        {capturedImage && ( <div>
             <h3>Preview</h3>
             <img
               src={capturedImage}
